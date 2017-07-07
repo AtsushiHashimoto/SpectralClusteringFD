@@ -7,9 +7,9 @@ Memory-efficient Spectral Clustering with Frequent Direction
 
 # Reference
 Spectral Clustering
-- Normalized cuts and image segmentation, 2000 Jianbo Shi, Jitendra Malik http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.160.2324
-- A Tutorial on Spectral Clustering, 2007 Ulrike von Luxburg http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.165.9323
-- Multiclass spectral clustering, 2003 Stella X. Yu, Jianbo Shi http://www1.icsi.berkeley.edu/~stellayu/publication/doc/2003kwayICCV.pdf
+- [Normalized cuts and image segmentation, 2000 Jianbo Shi, Jitendra Malik](http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.160.2324)
+- [A Tutorial on Spectral Clustering, 2007 Ulrike von Luxburg](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.165.9323)
+- [Multiclass spectral clustering, 2003 Stella X. Yu, Jianbo Shi](http://www1.icsi.berkeley.edu/~stellayu/publication/doc/2003kwayICCV.pdf)
 
 Frequent Direction
 - [Edo. Liberty, "Simple and Deterministic Matrix Sketching", ACM SIGKDD, 2013.](http://www.cs.yale.edu/homes/el327/papers/simpleMatrixSketching.pdf)
