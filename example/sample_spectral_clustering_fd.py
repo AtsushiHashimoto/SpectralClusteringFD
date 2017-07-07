@@ -28,6 +28,7 @@ def main():
     model_sketch = scfd.SpectralClusteringFD(n_clusters = n_centers,
                                       random_state=None,
                                       n_init=10,
+                                      normed=False,
                                       gamma=1., affinity='rbf',
                                       assign_labels='discretize',
                                       kernel_params=None, n_jobs=1
