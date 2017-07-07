@@ -79,6 +79,7 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
     def __init__(self, n_clusters=8, random_state=None,
                  n_init=10, gamma=1., affinity='rbf',
                  assign_labels='kmeans',
+                 normed=False,
                  kernel_params=None, n_jobs=1):
         self.n_clusters = n_clusters
         self.random_state = random_state
@@ -87,6 +88,7 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
         self.affinity = affinity
         self.assign_labels = assign_labels
         self.kernel_params = kernel_params
+        self.normed = normed
         self.n_jobs = n_jobs
 
     def fit(self, X, y=None):
@@ -107,15 +109,15 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
         ell = 2*(self.n_clusters+1) # +1 for drop_first, x2 for zero suppression in frequent_direction.
 
         if self.affinity == 'rbf':
-            self.affinity_matrix_, dd = laplacian_sketch_rbf_kernel(X, ell,gamma=self.gamma)
+            self.affinity_matrix_, dd = laplacian_sketch_rbf_kernel(X, ell,normed=self.normed,gamma=self.gamma)
         elif self.affinity == 'cosine':
-            self.affinity_matrix_, dd = laplacian_sketch_cosine_similarity(X, ell)
+            self.affinity_matrix_, dd = laplacian_sketch_cosine_similarity(X, ell, normed=self.normed)
         else:
             params = self.kernel_params
             if params is None:
                 params = {}
             if callable(self.affinity):
-                self.affinity_matrix_ = self.affinity(X, 2*self.n_clusters,params)
+                self.affinity_matrix_, dd = laplacian_sketch(X, ell, normed=self.normed, self.affinity, params)
             else:
                 warnings.warn("%s is unknown kernel"%self.affinity)
 

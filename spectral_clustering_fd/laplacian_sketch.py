@@ -6,28 +6,37 @@ from sklearn.preprocessing import normalize
 from sklearn.metrics.pairwise import pairwise_kernels
 
 
-def laplacian_sketch(X,ell,do_normalize,callback,**args):
+def laplacian_sketch(X,ell,do_normalize_feature=False,normed=True,callback,**args):
     fd = FrequentDirection(ell)
-    D = np.zeros(X.shape[0])
-    D = np.array([np.sqrt(np.sum(callback(X,i,**args))) for i in range(len(X))])
+
+    D = np.array([np.sum(callback(X,i,**args)) for i in range(len(X))])
+    if normed:
+        D = np.sqrt(D)
+
     isolation_mask = D==0
-    if do_normalize:
+
+
+    if do_normalize_feature:
+        # normalize original feature (for cosine distance)
         X[-isolation_mask] = normalize(X[-isolation_mask],norm='l2', axis=1, copy=False)
-    D[isolation_mask] = 1  # avoid 0 divide
+        D[:] = 1
+
     for i,isolation in enumerate(isolation_mask):
-        A_i = callback(X,i,**args)
-        A_i /= D[i]
-        A_i /= D
-        A_i *= -1
-        A_i[i] = 1 - isolation
+        A_i = -callback(X,i,**args)
+        if normed:
+            A_i /= D[i]
+            A_i /= D
+            A_i[i] = 1 - isolation # set 0 to isolated node.
+        else:
+            A_i[i] = D[i]
         fd.add_sample(-A_i)
     return fd.get_result().T, D
 
-def laplacian_sketch_rbf_kernel(X,ell,gamma=None):
-    return laplacian_sketch(X,ell,False,one_row_rbf_kernel,gamma=None)
+def laplacian_sketch_rbf_kernel(X,ell,normed=True,gamma=None):
+    return laplacian_sketch(X,ell,normed=normed,one_row_rbf_kernel,gamma=None)
 
-def laplacian_sketch_cosine_similarity(X,ell,gamma=None):
-    return laplacian_sketch(X,ell,True,one_row_cosine_similarity)
+def laplacian_sketch_cosine_similarity(X,ell,normed=True,gamma=None):
+    return laplacian_sketch(X,ell,do_normalize_faeture=True,normed=normed,one_row_cosine_similarity)
 
 def one_row_rbf_kernel(X,i,gamma=None):
     """
