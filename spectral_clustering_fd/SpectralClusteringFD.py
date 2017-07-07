@@ -79,7 +79,7 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
     def __init__(self, n_clusters=8, random_state=None,
                  n_init=10, gamma=1., affinity='rbf',
                  assign_labels='kmeans',
-                 normed=False,
+                 normed=True,
                  kernel_params=None, n_jobs=1):
         self.n_clusters = n_clusters
         self.random_state = random_state
@@ -117,7 +117,7 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
             if params is None:
                 params = {}
             if callable(self.affinity):
-                self.affinity_matrix_, dd = laplacian_sketch(X, ell, normed=self.normed, self.affinity, params)
+                self.affinity_matrix_, dd = laplacian_sketch(X, ell, False, self.normed, self.affinity, params)
             else:
                 warnings.warn("%s is unknown kernel"%self.affinity)
 
