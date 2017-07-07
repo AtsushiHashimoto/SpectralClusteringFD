@@ -20,7 +20,7 @@ BSD 2-clause License
 # Install
 ```
 % pip install git+https://github.com/AtsushiHashimoto/frequent_direction.git
-% pip install git+https://github.com/AtsushiHashimoto/spectral_clustering_fd.git
+% pip install git+https://github.com/AtsushiHashimoto/SpectralClusteringFD.git
 ```
 
 
