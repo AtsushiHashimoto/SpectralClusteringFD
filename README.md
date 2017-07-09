@@ -1,5 +1,6 @@
 # SpectralClusteringFD
 Memory-efficient Spectral Clustering with Frequent Direction
+(Caution: This program has critical issue: Because it calculate eigenvectors for L'^TL' such that ||L^TL-L'^TL'|| (not for L'), the result is much worse than real spectral clustering.
 
 # Special Thanks
 - [Scikit-learn](https://github.com/scikit-learn/)
