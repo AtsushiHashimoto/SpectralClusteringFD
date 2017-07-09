@@ -76,12 +76,16 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
       Stella X. Yu, Jianbo Shi
       http://www1.icsi.berkeley.edu/~stellayu/publication/doc/2003kwayICCV.pdf
     """
-    def __init__(self, n_clusters=8, random_state=None,
+    def __init__(self, n_clusters=8, n_buffer_rows=None,random_state=None,
                  n_init=10, gamma=1., affinity='rbf',
                  assign_labels='kmeans',
                  normed=True,
                  kernel_params=None, n_jobs=1):
         self.n_clusters = n_clusters
+        if n_buffer_rows is None:
+            self.n_buffer_rows = None
+        else:
+            self.n_buffer_rows = n_buffer_rows
         self.random_state = random_state
         self.n_init = n_init
         self.gamma = gamma
@@ -106,18 +110,18 @@ class SpectralClusteringFD(six.with_metaclass(ABCMeta, SpectralClustering)):
         X = check_array(X, accept_sparse=['csr', 'csc', 'coo'],
                         dtype=np.float64)
 
-        ell = 2*(self.n_clusters+1) # +1 for drop_first, x2 for zero suppression in frequent_direction.
-
+        ell = self.n_clusters +1  # +1 for drop_first, x2 for zero suppression in frequent_direction.
+        k = self.n_buffer_rows
         if self.affinity == 'rbf':
-            self.affinity_matrix_, dd = laplacian_sketch_rbf_kernel(X, ell,normed=self.normed,gamma=self.gamma)
+            self.affinity_matrix_, dd = laplacian_sketch_rbf_kernel(X, ell, k, normed=self.normed,gamma=self.gamma)
         elif self.affinity == 'cosine':
-            self.affinity_matrix_, dd = laplacian_sketch_cosine_similarity(X, ell, normed=self.normed)
+            self.affinity_matrix_, dd = laplacian_sketch_cosine_similarity(X, ell, k, normed=self.normed)
         else:
             params = self.kernel_params
             if params is None:
                 params = {}
             if callable(self.affinity):
-                self.affinity_matrix_, dd = laplacian_sketch(X, ell, False, self.normed, self.affinity, params)
+                self.affinity_matrix_, dd = laplacian_sketch(X, ell, k, False, self.normed, self.affinity, params)
             else:
                 warnings.warn("%s is unknown kernel"%self.affinity)
 
